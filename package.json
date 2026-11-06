@@ -1,9 +1,8 @@
 {
   "name": "dsh-latex-formula-editor",
   "version": "1.0.0",
-  "private": true,
   "type": "module",
-  "description": "Free and open-source LaTeX formula workbench in the DSH sidebar: visual editing, symbol palette, formula/image/PDF recognition and multi-format export.",
+  "description": "LaTeX formula editor for the DSH sidebar: offline MathJax rendering, symbol tiles, templates, favourites, OCR and multi-format export",
   "license": "MIT",
   "exports": {
     ".": "./index.js",
@@ -14,13 +13,13 @@
   "files": [
     "index.js",
     "client.js",
-    "lib/*.js",
-    "cordis.patch.yml",
-    "locale/*.json",
+    "lib/",
+    "vendor/",
     "icon.svg",
-    "vendor/**",
-    "docs/**",
-    "README.md"
+    "README.md",
+    "README.zh.md",
+    "README.en.md",
+    "docs/img/"
   ],
   "dsh": {
     "bundle": {
@@ -30,5 +29,18 @@
       "platform": "web",
       "immediately": true
     }
-  }
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "latex",
+    "mathjax",
+    "formula-editor",
+    "ocr"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiahui-huang1/dsh-latex-formula-editor.git"
+  },
+  "homepage": "https://github.com/jiahui-huang1/dsh-latex-formula-editor#readme"
 }
