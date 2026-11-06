@@ -2,6 +2,9 @@
 
 English · [简体中文](README.md)
 
+[![npm](https://img.shields.io/npm/v/dsh-latex-formula-editor.svg)](https://www.npmjs.com/package/dsh-latex-formula-editor)
+[![topic](https://img.shields.io/badge/topic-dsh--plugin-0e7490.svg)](https://github.com/topics/dsh-plugin)
+
 A free, open-source and fully offline LaTeX formula editor that lives in the **left sidebar** of the DeepSeek Harness Web UI (icon `Σ`).
 Interaction follows [latexlive.com](https://www.latexlive.com/), but everything runs on your own machine: maths is rendered by the
 bundled MathJax, PDFs are parsed by the bundled PDF.js — no account, no quota, no uploads (except the recognition backend you configure).

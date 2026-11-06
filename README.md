@@ -2,6 +2,9 @@
 
 简体中文 · [English](README.en.md)
 
+[![npm](https://img.shields.io/npm/v/dsh-latex-formula-editor.svg)](https://www.npmjs.com/package/dsh-latex-formula-editor)
+[![topic](https://img.shields.io/badge/topic-dsh--plugin-0e7490.svg)](https://github.com/topics/dsh-plugin)
+
 一个免费开源、可离线使用的 LaTeX 公式编辑器，挂在 DeepSeek Harness Web UI 的**左侧栏**（图标 `Σ`）。
 交互参考 [latexlive.com](https://www.latexlive.com/)，但**全部在自己的机器上运行**：数学渲染用随包分发的
 MathJax，PDF 解析用随包分发的 PDF.js，没有账号、没有额度、也不会上传（除了你自己配置的识别后端）。
