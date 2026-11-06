@@ -8,7 +8,7 @@
 #   - main               key=latex-editor  (the panel it opens)
 - insert:
     - id: latex-editor
-      name: '@local/dsh-latex-editor'
+      name: 'dsh-latex-formula-editor'
       config:
         # Recognition backend: 'auto' prefers the harness model, then an endpoint.
         backend: auto
