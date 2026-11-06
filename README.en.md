@@ -8,7 +8,7 @@ bundled MathJax, PDFs are parsed by the bundled PDF.js — no account, no quota,
 
 - Sidebar entry → one panel with five views: **Editor / Image OCR / Document OCR / Favourites / Help**
 - Live LaTeX rendering (MathJax 3.2.2, SVG output, offline)
-- UI scale **150%** by default (Settings → UI scale, 100%–200%)
+- UI scale **125%** by default (Settings → UI scale, 100%–200%)
 - Light / dark theme switch (follows the system by default), 简体中文 / 繁體中文 / English
 - Share links encode the formula in the URL hash — nothing goes through a server
 - Nine export formats plus four export menus (image / code / escape / share)
@@ -89,7 +89,7 @@ The canvas background follows the theme: white in the light theme, black in the 
 
 ### Interface
 
-- **150%** scale by default, adjustable 100%–200%; narrow panels switch to a compact layout (tabs wrap, actions become icons, panels scroll internally)
+- **125%** scale by default, adjustable 100%–200%; narrow panels switch to a compact layout (tabs wrap, actions become icons, panels scroll internally)
 - Light / dark slider (sun / moon icons), system default
 - Language menu: 简体中文 / 繁體中文 / English (traditional Chinese is derived from the simplified dictionary on the fly)
 
@@ -132,7 +132,7 @@ vendor/                 MathJax 3.2.2 and PDF.js (shipped with the plugin)
 
 ## Settings
 
-- **Editor**: UI scale (150% default), source font size, word wrap, formula numbering, favourites limit
+- **Editor**: UI scale (125% default), source font size, word wrap, formula numbering, favourites limit
 - **Recognition**: `auto` prefers the harness model; otherwise fill in an OpenAI-compatible endpoint (URL / model / key)
 - Rendering and export are fully offline; only OCR sends the image to your backend
 - Settings live in `<DSH_HOME>/latex-editor/settings.json`
