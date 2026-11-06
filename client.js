@@ -1,5 +1,5 @@
 /**
- * @local/dsh-latex-editor — Client entry.
+ * dsh-latex-formula-editor — Client entry.
  *
  * The bundle's `dsh.client` declaration loads this file as the browser half. It
  *   - loads the workbench modules from the Host (`/plugins/latex-editor/lib/*.js`,
@@ -9,7 +9,7 @@
  *     (`main`, keyed by the same id).
  */
 window.__ModuleLoader__.load({
-  id: '@local/dsh-latex-editor',
+  id: 'dsh-latex-formula-editor',
   factory(require) {
     const React = require('react')
     const h = React.createElement

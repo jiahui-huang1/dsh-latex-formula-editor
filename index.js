@@ -17,12 +17,21 @@ import { fileURLToPath } from 'node:url'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const PREFIX = '/plugins/latex-editor'
+// The web shell addresses a client bundle as /plugins/<package-name>/client.js,
+// while the panel's own assets use the short prefix above; serve both.
+const PREFIX_ALIASES = ['/plugins/dsh-latex-formula-editor']
+const ALL_PREFIXES = [PREFIX].concat(PREFIX_ALIASES)
 const MAX_JSON_BYTES = 24 * 1024 * 1024
 const MAX_LATEX_CHARS = 64 * 1024
 
 const STATIC_ROOTS = {
   lib: path.join(HERE, 'lib'),
   vendor: path.join(HERE, 'vendor'),
+}
+
+/** Root-level files the client loader may request (single path segment). */
+const ROOT_FILES = {
+  'client.js': path.join(HERE, 'client.js'),
 }
 
 const CONTENT_TYPES = {
@@ -209,14 +218,22 @@ export function apply(ctx, rawConfig) {
 
   async function serveStatic(res, requestPath) {
     const segments = requestPath.split('/').filter(Boolean)
-    if (segments.length < 2) return sendError(res, 404, 'NOT_FOUND', 'not found')
-    const rootName = segments[0]
-    const rootDir = STATIC_ROOTS[rootName]
-    if (!rootDir) return sendError(res, 404, 'NOT_FOUND', 'not found')
-    const relative = segments.slice(1).join('/')
-    const resolved = path.resolve(rootDir, relative)
-    if (resolved !== rootDir && !resolved.startsWith(rootDir + path.sep)) {
-      return sendError(res, 403, 'FORBIDDEN', 'path escapes the plugin directory')
+    // The browser half is imported by DSH from /plugins/<id>/client.js, so the
+    // root entry has to be served too (it lives next to index.js, not in lib/).
+    let resolved
+    if (segments.length === 1) {
+      const rootFile = ROOT_FILES[segments[0]]
+      if (!rootFile) return sendError(res, 404, 'NOT_FOUND', 'not found')
+      resolved = rootFile
+    } else {
+      const rootName = segments[0]
+      const rootDir = STATIC_ROOTS[rootName]
+      if (!rootDir) return sendError(res, 404, 'NOT_FOUND', 'not found')
+      const relative = segments.slice(1).join('/')
+      resolved = path.resolve(rootDir, relative)
+      if (resolved !== rootDir && !resolved.startsWith(rootDir + path.sep)) {
+        return sendError(res, 403, 'FORBIDDEN', 'path escapes the plugin directory')
+      }
     }
     const ext = path.extname(resolved).toLowerCase()
     const type = CONTENT_TYPES[ext]
@@ -532,7 +549,14 @@ export function apply(ctx, rawConfig) {
         sendError(res, 404, 'NOT_FOUND', 'not found')
         return
       }
-      const sub = pathname.slice(PREFIX.length) || '/'
+      const matched = ALL_PREFIXES.filter(function (prefix) {
+        return pathname === prefix || pathname.indexOf(prefix + '/') === 0
+      })[0]
+      if (!matched) {
+        sendError(res, 404, 'NOT_FOUND', 'not found')
+        return
+      }
+      const sub = pathname.slice(matched.length) || '/'
       try {
         if (sub === '/health' && (method === 'GET' || method === 'HEAD')) return await handleHealth(res)
         if (sub === '/recognize' && method === 'POST') return await handleRecognize(req, res)
@@ -549,7 +573,14 @@ export function apply(ctx, rawConfig) {
         return undefined
       }
     }
-    disposers.push(ctx.effect(() => webServer.register({ kind: 'prefix', path: PREFIX, handler }), 'latex-editor: asset, health and recognition routes'))
+    for (const prefix of ALL_PREFIXES) {
+      disposers.push(
+        ctx.effect(
+          () => webServer.register({ kind: 'prefix', path: prefix, handler }),
+          'latex-editor: routes ' + prefix,
+        ),
+      )
+    }
   }
 
   /* -------------------------------------------------------------- agent tool */
