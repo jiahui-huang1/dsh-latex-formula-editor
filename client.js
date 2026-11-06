@@ -19,7 +19,7 @@ window.__ModuleLoader__.load({
 
     const NS = 'latex-editor'
     const ASSET = '/plugins/latex-editor/lib/'
-    const MODULES = ['00-core', '10-latex', '20-render', '30-visual', '35-tiles', '40-recognition', '50-app', '56-recognition-panels', '60-settings-help', '90-skin']
+    const MODULES = ['00-core', '10-latex', '20-render', '30-visual', '35-tiles', '40-recognition', '45-convert', '50-app', '56-recognition-panels', '60-settings-help', '90-skin']
     const NAV_LABEL = { zh: '公式编辑器', en: 'Formula Editor' }
 
     const MARK_PATH =
