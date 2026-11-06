@@ -1,0 +1,22 @@
+# Bundle patch layer for the LaTeX formula workbench.
+#
+# The Host row loads ./index.js (static asset routes for the vendored MathJax and
+# PDF.js builds, the recognition endpoint, and the `latex_formula` agent tool).
+# The `dsh.client` declaration in package.json makes the Web app load ./client.js
+# as the browser half, which registers:
+#   - sidebar.panellist  id=latex-editor   (the left-column entry)
+#   - main               key=latex-editor  (the panel it opens)
+- insert:
+    - id: latex-editor
+      name: '@local/dsh-latex-editor'
+      config:
+        # Recognition backend: 'auto' prefers the harness model, then an endpoint.
+        backend: auto
+        # Optional OpenAI-compatible vision endpoint used when `backend` is
+        # 'endpoint' or when the harness model cannot accept images.
+        endpointUrl: ''
+        endpointModel: ''
+        endpointKey: ''
+        # Hard caps for one recognition request.
+        maxImageBytes: 8388608
+        timeoutMs: 120000
