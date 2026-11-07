@@ -174,9 +174,30 @@ function buildPrompt(hint, instruction) {
 
 /* ------------------------------------------------------------------ plugin */
 
+/** Cordis activates the plugin only once the web server service is available. */
+export const inject = ['webServer']
+
+/**
+ * Read a service without triggering Cordis' "cannot get property X without
+ * inject" guard: ctx.get() is evaluated first, the property access is defensive.
+ */
+function service(ctx, name) {
+  try {
+    const viaGet = ctx.get?.(name)
+    if (viaGet !== undefined && viaGet !== null) return viaGet
+  } catch {
+    /* ignore */
+  }
+  try {
+    return ctx[name]
+  } catch {
+    return undefined
+  }
+}
+
 export function apply(ctx, rawConfig) {
   const config = normalizeConfig(rawConfig)
-  const webServer = ctx.get?.('webServer') ?? ctx.webServer
+  const webServer = service(ctx, 'webServer')
   const disposers = []
 
   const OVERRIDABLE = ['backend', 'endpointUrl', 'endpointModel', 'endpointKey', 'prompt']
@@ -267,7 +288,7 @@ export function apply(ctx, rawConfig) {
 
   /** The provider/model pair a recognition call should use, or a reason it cannot. */
   async function resolveVisionRoute() {
-    const llm = ctx.get?.('llm') ?? ctx.llm
+    const llm = service(ctx, 'llm')
     if (!llm) return { error: { code: 'NO_BACKEND', message: 'the llm service is unavailable' } }
     const candidates = []
     if (config.provider && config.model) candidates.push({ provider: config.provider, model: config.model })
@@ -296,8 +317,8 @@ export function apply(ctx, rawConfig) {
   }
 
   async function recognizeWithModel(image, hint, signal) {
-    const llm = ctx.get?.('llm') ?? ctx.llm
-    const attachments = ctx.get?.('attachments') ?? ctx.attachments
+    const llm = service(ctx, 'llm')
+    const attachments = service(ctx, 'attachments')
     if (!llm) throw Object.assign(new Error('the llm service is unavailable'), { code: 'NO_BACKEND' })
     if (!attachments) throw Object.assign(new Error('the attachment service is unavailable'), { code: 'NO_BACKEND' })
     const route = await resolveVisionRoute()
@@ -426,7 +447,7 @@ export function apply(ctx, rawConfig) {
   /* ----------------------------------------------------------------- routes */
 
   async function handleHealth(res) {
-    const llm = ctx.get?.('llm') ?? ctx.llm
+    const llm = service(ctx, 'llm')
     let llmState = { available: Boolean(llm), provider: null, model: null, vision: false, reason: null }
     if (llm) {
       const route = await resolveVisionRoute()
@@ -585,7 +606,7 @@ export function apply(ctx, rawConfig) {
 
   /* -------------------------------------------------------------- agent tool */
 
-  const tools = ctx.get?.('tools') ?? ctx.tools
+  const tools = service(ctx, 'tools')
   if (tools && typeof tools.register === 'function') {
     const definition = {
       name: 'latex_formula',
