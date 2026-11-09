@@ -1,4 +1,4 @@
-# DSH LaTeX 公式编辑器
+﻿# DSH LaTeX 公式编辑器
 
 简体中文 · [English](README.en.md)
 
@@ -83,7 +83,7 @@ AsciiMath / Typst 由内置 TeX 解析器真实转换，OMML 由 MathML DOM 转�
 ### 识别
 
 - **图片识别**：拖拽、粘贴或选择图片，调用你配置的模型识别为 LaTeX 并插入编辑器
-- **文档识别**：PDF 逐页渲染后识别，可挑页；完成后可**下载 Word / LaTeX / Markdown**，最近 15 天的识别记录可重新下载（不消耗额度）
+- **文档识别**：PDF 逐页渲染后识别，可挑页；完成后可**下载 Word(.docx) / LaTeX / Markdown**——Word 里的公式是 Office Math（Cambria Math）对象，可在 Word 里直接编辑；切换页签不会打断识别，识别记录默认永久保存，可在设置里限定天数并手动清空
 
 ![文档识别](docs/img/doc-ocr.png)
 

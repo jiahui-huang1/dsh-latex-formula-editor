@@ -86,7 +86,7 @@ The canvas background follows the theme: white in the light theme, black in the 
 ### Recognition
 
 - **Image OCR**: drop, paste or pick an image; the configured model returns LaTeX and inserts it
-- **Document OCR**: renders each PDF page and recognises it page by page; when done you can **download Word / LaTeX / Markdown**, and results from the last 15 days can be downloaded again without using quota
+- **Document OCR**: renders each PDF page and recognises it page by page; when done you can **download Word (.docx) / LaTeX / Markdown** — the Word file contains real Office Math (Cambria Math) equations you can edit in Word. Switching tabs does not interrupt a run, and records are kept forever by default (a retention period can be set in Settings, and the list can be cleared by hand)
 
 ![Document OCR](docs/img/doc-ocr.png)
 
