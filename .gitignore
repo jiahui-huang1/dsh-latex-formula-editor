@@ -1,2 +1,5 @@
 node_modules/
 docs/_final_copy.py
+
+# 本地迭代状态（三日闭环）
+.iteration/
