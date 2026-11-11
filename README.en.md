@@ -61,10 +61,10 @@ With a selection the text is wrapped; without one an empty shell is inserted and
 
 The fifth tab; every favourite is a card:
 
-- **Title** ("Untitled formula" by default, click to rename), **timestamp**, **rendered preview**, **LaTeX source** (click to copy)
+- **Title** (the tile name when favourited from a tile, otherwise the first 24 characters of the formula, falling back to "Untitled formula"; click to rename), **timestamp**, **rendered preview**, **LaTeX source** (click to copy)
 - **Insert / Copy / Delete** buttons
 - A search box filters by **title or source**
-- The cap defaults to **10** (Settings → Favourites limit, 1–50); the oldest entry is dropped beyond it
+- The cap defaults to **10** (Settings → Favourites limit, 1–50); beyond it the oldest entry is removed and a warning toast says so
 
 ![Favourites](docs/img/favourites.png)
 
@@ -86,7 +86,7 @@ The canvas background follows the theme: white in the light theme, black in the 
 ### Recognition
 
 - **Image OCR**: drop, paste or pick an image; the configured model returns LaTeX and inserts it
-- **Document OCR**: renders each PDF page and recognises it page by page; when done you can **download Word (.docx) / LaTeX / Markdown** — the Word file contains real Office Math (Cambria Math) equations you can edit in Word. Switching tabs does not interrupt a run, and records are kept forever by default (a retention period can be set in Settings, and the list can be cleared by hand)
+- **Document OCR**: renders each PDF page and recognises it page by page; when done you can **download Word (.docx) / LaTeX / Markdown** — the Word file contains real Office Math (Cambria Math) equations you can edit in Word. Switching tabs does not interrupt a run, and records are kept forever by default (a retention period can be set in Settings, and the list can be cleared by hand). Each record can also be **viewed** (read-only page-by-page dialog) or **sent straight to the editor**, without downloading or re-running recognition
 
 ![Document OCR](docs/img/doc-ocr.png)
 
