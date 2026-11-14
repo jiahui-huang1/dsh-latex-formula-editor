@@ -78,12 +78,16 @@ MathJax，PDF 解析用随包分发的 PDF.js，没有账号、没有额度、�
 
 AsciiMath / Typst 由内置 TeX 解析器真实转换，OMML 由 MathML DOM 转换为 Word 公式结构，不是直接复制 LaTeX。
 
+- 结构公式：分数、上下标、根式（含 `\sqrt[n]{}`）、积分/求和上下限、矩阵都按语义写入 OMML，Word 里是可继续编辑的公式对象；`pmatrix` / `bmatrix` / `vmatrix` / `matrix` 会生成 Word 原生矩阵并带对应括号
+- 矩阵、`cases`、`aligned` 在 Typst 侧有对应写法（`mat(...)`、`cases(...)`、按 `&` 对齐），`\mathbb` / `\mathcal` / `\mathfrak` 等字体命令会转成 `bb()` / `cal()` / `frak()`；Typst 输出已用 typst 0.15.1 实际编译验证
+- AsciiMath 表达力有限：`cases` / `aligned` 这类环境会照常输出最接近的结果，同时提示「以下环境未完全转换」，便于你自行判断
+
 预览画布底色随主题自动切换：浅色主题白底、深色主题黑底（透明 / 白底 / 深色仍可手动覆盖）。
 
 ### 识别
 
 - **图片识别**：拖拽、粘贴或选择图片，调用你配置的模型识别为 LaTeX 并插入编辑器
-- **文档识别**：PDF 逐页渲染后识别，可挑页；完成后可**下载 Word(.docx) / LaTeX / Markdown**——Word 里的公式是 Office Math（Cambria Math）对象，可在 Word 里直接编辑；切换页签不会打断识别，识别记录默认永久保存，可在设置里限定天数并手动清空。历史记录支持**查看**（按页只读弹窗）和**发送到编辑器**，不必重新下载或重新识别
+- **文档识别**：PDF 逐页渲染后识别，可挑页；完成后可**下载 Word(.docx) / LaTeX / Markdown**——Word 里的公式是 Office Math（Cambria Math）对象，分数/根式/上下标/矩阵都在，可在 Word 里直接编辑；切换页签不会打断识别，识别记录默认永久保存，可在设置里限定天数并手动清空。历史记录支持**查看**（按页只读弹窗）和**发送到编辑器**，不必重新下载或重新识别
 
 ![文档识别](docs/img/doc-ocr.png)
 
@@ -135,7 +139,7 @@ vendor/                  MathJax 3.2.2 与 PDF.js（随包分发）
 - **编辑器**：界面缩放（默认 125%）、源码字号、自动换行、公式编号、收藏夹上限
 - **识别**：`auto` 优先用 Harness 模型；也可填 OpenAI 兼容端点（URL / 模型 / Key）
 - 渲染与导出完全离线，只有识别会把图片发给你配置的后端
-- 设置保存在本机 `<DSH_HOME>/latex-editor/settings.json`
+- 设置保存在本机 `<DSH_HOME>/latex-editor/settings.json`；端点 Key 也写入该文件（明文），共享机器上请留空
 
 ## 兼容性
 

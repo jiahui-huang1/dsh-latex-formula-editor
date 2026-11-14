@@ -81,12 +81,16 @@ The export bar sits at the top of the preview column, with four menus:
 
 AsciiMath and Typst are produced by a real TeX parser and OMML by converting the MathML DOM into Word's formula structure — not by copying the LaTeX source.
 
+- Structured formulas: fractions, superscripts/subscripts, roots (including `\sqrt[n]{}`), integral/sum limits and matrices are written as real OMML, so they stay editable in Word; `pmatrix` / `bmatrix` / `vmatrix` / `matrix` become a native Word matrix with the matching delimiters
+- Matrices, `cases` and `aligned` map to Typst constructs (`mat(...)`, `cases(...)`, `&` alignment), and font commands such as `\mathbb` / `\mathcal` / `\mathfrak` become `bb()` / `cal()` / `frak()`; the Typst output is compiled against typst 0.15.1 as part of verification
+- AsciiMath has limited expressive power: environments such as `cases` / `aligned` still emit the closest possible output, together with a "not fully converted" notice so you can decide whether to adjust it
+
 The canvas background follows the theme: white in the light theme, black in the dark theme (transparent / white / dark can still be picked manually).
 
 ### Recognition
 
 - **Image OCR**: drop, paste or pick an image; the configured model returns LaTeX and inserts it
-- **Document OCR**: renders each PDF page and recognises it page by page; when done you can **download Word (.docx) / LaTeX / Markdown** — the Word file contains real Office Math (Cambria Math) equations you can edit in Word. Switching tabs does not interrupt a run, and records are kept forever by default (a retention period can be set in Settings, and the list can be cleared by hand). Each record can also be **viewed** (read-only page-by-page dialog) or **sent straight to the editor**, without downloading or re-running recognition
+- **Document OCR**: renders each PDF page and recognises it page by page; when done you can **download Word (.docx) / LaTeX / Markdown** — the Word file contains real Office Math (Cambria Math) equations, with fractions, roots, scripts and matrices preserved and editable in Word. Switching tabs does not interrupt a run, and records are kept forever by default (a retention period can be set in Settings, and the list can be cleared by hand). Each record can also be **viewed** (read-only page-by-page dialog) or **sent straight to the editor**, without downloading or re-running recognition
 
 ![Document OCR](docs/img/doc-ocr.png)
 
@@ -138,7 +142,7 @@ vendor/                 MathJax 3.2.2 and PDF.js (shipped with the plugin)
 - **Editor**: UI scale (125% default), source font size, word wrap, formula numbering, favourites limit
 - **Recognition**: `auto` prefers the harness model; otherwise fill in an OpenAI-compatible endpoint (URL / model / key)
 - Rendering and export are fully offline; only OCR sends the image to your backend
-- Settings live in `<DSH_HOME>/latex-editor/settings.json`
+- Settings live in `<DSH_HOME>/latex-editor/settings.json`; the endpoint key is written there too (plain text), so leave it empty on shared machines
 
 ## Requirements
 
