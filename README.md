@@ -13,8 +13,8 @@ MathJax，PDF 解析用随包分发的 PDF.js，没有账号、没有额度、�
 - LaTeX 实时渲染（MathJax 3.2.2，SVG 输出，离线）
 - 界面缩放默认 **125%**（设置 → 界面缩放可在 100%–200% 之间切换）
 - 浅色 / 深色主题一键切换（默认跟随系统），简体中文 / 繁體中文 / English 三语
-- 分享链接把公式编码进 URL hash，不经过任何服务器
-- 九种导出格式 + 四组导出菜单（图片 / 代码 / 转义 / 分享）
+- 公式可直接复制为图片，或导出为可离线打开的 HTML（内联矢量公式）
+- 导出条分五组：复制图片 / 输出图片 / 输出代码 / 输出文档 / 转义
 
 ![编辑器](docs/img/editor.png)
 
@@ -67,18 +67,23 @@ MathJax，PDF 解析用随包分发的 PDF.js，没有账号、没有额度、�
 
 ### 输出区域
 
-导出条在预览区顶部，四组菜单：
+导出条在预览区顶部，五个控件：
 
 | 菜单 | 选项 |
 | --- | --- |
+| 复制图片 | 把公式以 PNG 写入剪贴板，可直接粘进 Word / PPT / 聊天窗口 |
 | 输出图片 | SVG / PNG / JPG（3× 倍率） |
 | 输出代码 | LaTeX、AsciiMath、Typst、SVG Code、HTML 行内、HTML 独立、MathML、MathML(mml:)、MathML(m:)、MathML(attr:)、OMML |
+| 输出文档 | Word (.docx)、LaTeX (.tex)、Markdown (.md)、HTML (.html) |
 | 转义 | 反斜杠转义、`$…$`、`$$…$$`、`\(…\)`、`\[…\]`、JSON 字符串 |
-| 分享 | 复制分享链接（`#tex=` 编码，打开即回填公式） |
+
+`HTML (.html)` 生成单个离线文件：公式以矢量 SVG 内联，附折叠的 LaTeX 源码，不含脚本和外部依赖，双击即可用任意浏览器打开，适合发给没装 DSH 或本插件的人。
 
 AsciiMath / Typst 由内置 TeX 解析器真实转换，OMML 由 MathML DOM 转换为 Word 公式结构，不是直接复制 LaTeX。
 
 - 结构公式：分数、上下标、根式（含 `\sqrt[n]{}`）、积分/求和上下限、矩阵都按语义写入 OMML，Word 里是可继续编辑的公式对象；`pmatrix` / `bmatrix` / `vmatrix` / `matrix` 会生成 Word 原生矩阵并带对应括号
+- 多行环境：`align` / `gather` / `aligned` / `cases` 在 Word 里写成多行公式（自动去掉 MathJax 的公式编号列），不会再退化成一行 LaTeX 源码
+- 「复制图片」走浏览器剪贴板 API，首次使用可能弹出授权；被拒绝时会给出提示而不是静默失败
 - 矩阵、`cases`、`aligned` 在 Typst 侧有对应写法（`mat(...)`、`cases(...)`、按 `&` 对齐），`\mathbb` / `\mathcal` / `\mathfrak` 等字体命令会转成 `bb()` / `cal()` / `frak()`；Typst 输出已用 typst 0.15.1 实际编译验证
 - AsciiMath 表达力有限：`cases` / `aligned` 这类环境会照常输出最接近的结果，同时提示「以下环境未完全转换」，便于你自行判断
 

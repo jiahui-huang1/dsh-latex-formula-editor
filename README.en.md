@@ -13,8 +13,8 @@ bundled MathJax, PDFs are parsed by the bundled PDF.js — no account, no quota,
 - Live LaTeX rendering (MathJax 3.2.2, SVG output, offline)
 - UI scale **125%** by default (Settings → UI scale, 100%–200%)
 - Light / dark theme switch (follows the system by default), 简体中文 / 繁體中文 / English
-- Share links encode the formula in the URL hash — nothing goes through a server
-- Nine export formats plus four export menus (image / code / escape / share)
+- Copy the formula as an image, or export a self-contained HTML page that opens offline
+- Export bar with five groups: copy image / images / code / documents / escaping
 
 ![Editor](docs/img/editor.png)
 
@@ -70,18 +70,23 @@ The fifth tab; every favourite is a card:
 
 ### Output
 
-The export bar sits at the top of the preview column, with four menus:
+The export bar sits at the top of the preview column, with five controls:
 
 | Menu | Options |
 | --- | --- |
+| Copy image | Puts the formula on the clipboard as PNG, ready to paste into Word / PowerPoint / chat |
 | Image | SVG / PNG / JPG (3× scale) |
 | Code | LaTeX, AsciiMath, Typst, SVG Code, HTML inline, HTML display, MathML, MathML (mml:), MathML (m:), MathML (attr:), OMML |
+| Document | Word (.docx), LaTeX (.tex), Markdown (.md), HTML (.html) |
 | Escape | Escaped backslash, `$…$`, `$$…$$`, `\(…\)`, `\[…\]`, JSON string |
-| Share | Copy the share link (`#tex=` encoded — opening it restores the formula) |
+
+`HTML (.html)` writes a single offline file: the formula is inlined as vector SVG, with the LaTeX source folded underneath and no scripts or external assets — recipients can double-click it in any browser, even without DSH or this plugin.
 
 AsciiMath and Typst are produced by a real TeX parser and OMML by converting the MathML DOM into Word's formula structure — not by copying the LaTeX source.
 
 - Structured formulas: fractions, superscripts/subscripts, roots (including `\sqrt[n]{}`), integral/sum limits and matrices are written as real OMML, so they stay editable in Word; `pmatrix` / `bmatrix` / `vmatrix` / `matrix` become a native Word matrix with the matching delimiters
+- Multi-line environments: `align` / `gather` / `aligned` / `cases` become real multi-line Word formulas (the MathJax equation-number column is dropped), never a single line of raw LaTeX
+- "Copy image" uses the browser clipboard API, so the first use may ask for permission; a denial shows a message instead of failing silently
 - Matrices, `cases` and `aligned` map to Typst constructs (`mat(...)`, `cases(...)`, `&` alignment), and font commands such as `\mathbb` / `\mathcal` / `\mathfrak` become `bb()` / `cal()` / `frak()`; the Typst output is compiled against typst 0.15.1 as part of verification
 - AsciiMath has limited expressive power: environments such as `cases` / `aligned` still emit the closest possible output, together with a "not fully converted" notice so you can decide whether to adjust it
 
