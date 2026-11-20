@@ -13,8 +13,9 @@ MathJax，PDF 解析用随包分发的 PDF.js，没有账号、没有额度、�
 - LaTeX 实时渲染（MathJax 3.2.2，SVG 输出，离线）
 - 界面缩放默认 **125%**（设置 → 界面缩放可在 100%–200% 之间切换）
 - 浅色 / 深色主题一键切换（默认跟随系统），简体中文 / 繁體中文 / English 三语
-- 公式可直接复制为图片，或导出为可离线打开的 HTML（内联矢量公式）
+- 公式可直接复制为图片（背景跟随预览表面：白底 / 深色 / 透明），或导出为可离线打开的 HTML（内联矢量公式）
 - 导出条分五组：复制图片 / 输出图片 / 输出代码 / 输出文档 / 转义
+- 支持把 `.tex` / `.txt` 文件直接拖进编辑区导入
 
 ![编辑器](docs/img/editor.png)
 
@@ -49,10 +50,12 @@ MathJax，PDF 解析用随包分发的 PDF.js，没有账号、没有额度、�
 | 环境 | align / aligned / gathered / cases / split / array / eqnarray，以及「无环境」（拆掉最外层环境）；选中即包 `\begin{…}…\end{…}` |
 | 清空 | 清空源码区 |
 | 撤销 | 撤销上一步（连续输入 400ms 合并为一步，最多 120 步） |
-| 导入 | 读取 `.tex` / `.txt` |
+| 导入 | 读取 `.tex` / `.txt`；也可以直接把文件拖到编辑区 |
 | 收藏 | 把当前公式存进收藏夹 |
 
 有选中文字就包裹选中内容，没有则插入空壳并把光标放进去。
+
+拖放导入只接受 `.tex` / `.txt`（或 `text/plain`），其他类型会提示并不改动正文。
 
 ### 收藏夹
 
@@ -71,7 +74,7 @@ MathJax，PDF 解析用随包分发的 PDF.js，没有账号、没有额度、�
 
 | 菜单 | 选项 |
 | --- | --- |
-| 复制图片 | 把公式以 PNG 写入剪贴板，可直接粘进 Word / PPT / 聊天窗口 |
+| 复制图片 | 把公式以 PNG 写入剪贴板，可直接粘进 Word / PPT / 聊天窗口；背景跟随预览表面（白底 / 深色 / 透明） |
 | 输出图片 | SVG / PNG / JPG（3× 倍率） |
 | 输出代码 | LaTeX、AsciiMath、Typst、SVG Code、HTML 行内、HTML 独立、MathML、MathML(mml:)、MathML(m:)、MathML(attr:)、OMML |
 | 输出文档 | Word (.docx)、LaTeX (.tex)、Markdown (.md)、HTML (.html) |
@@ -84,6 +87,9 @@ AsciiMath / Typst 由内置 TeX 解析器真实转换，OMML 由 MathML DOM 转�
 - 结构公式：分数、上下标、根式（含 `\sqrt[n]{}`）、积分/求和上下限、矩阵都按语义写入 OMML，Word 里是可继续编辑的公式对象；`pmatrix` / `bmatrix` / `vmatrix` / `matrix` 会生成 Word 原生矩阵并带对应括号
 - 多行环境：`align` / `gather` / `aligned` / `cases` 在 Word 里写成多行公式（自动去掉 MathJax 的公式编号列），不会再退化成一行 LaTeX 源码
 - 「复制图片」走浏览器剪贴板 API，首次使用可能弹出授权；被拒绝时会给出提示而不是静默失败
+- 复制图片的底色跟随预览表面：白底得到不透明白底 PNG、深色得到深底 PNG（适合深色 PPT / 聊天）、透明得到透明 PNG
+- Markdown 导出统一包成单层 `$$ … $$`；源码本身已带 `$…$` / `$$…$$` / `\[…\]` 时会先去掉外层定界符，避免嵌套
+- 公式编号：开启后多行环境（`align` / `gather` 等）整块只标一个号，`\tag{…}` 原样保留；关闭时不出现任何自动编号
 - 矩阵、`cases`、`aligned` 在 Typst 侧有对应写法（`mat(...)`、`cases(...)`、按 `&` 对齐），`\mathbb` / `\mathcal` / `\mathfrak` 等字体命令会转成 `bb()` / `cal()` / `frak()`；Typst 输出已用 typst 0.15.1 实际编译验证
 - AsciiMath 表达力有限：`cases` / `aligned` 这类环境会照常输出最接近的结果，同时提示「以下环境未完全转换」，便于你自行判断
 
@@ -91,7 +97,7 @@ AsciiMath / Typst 由内置 TeX 解析器真实转换，OMML 由 MathML DOM 转�
 
 ### 识别
 
-- **图片识别**：拖拽、粘贴或选择图片，调用你配置的模型识别为 LaTeX 并插入编辑器
+- **图片识别**：拖拽、粘贴或选择图片，调用你配置的模型识别为 LaTeX 并插入编辑器；识别结果自动写入「最近识别」（保留最近 10 条，刷新或切页签都不丢），可点选载回、复制、发送到编辑器、单条删除或清空
 - **文档识别**：PDF 逐页渲染后识别，可挑页；完成后可**下载 Word(.docx) / LaTeX / Markdown**——Word 里的公式是 Office Math（Cambria Math）对象，分数/根式/上下标/矩阵都在，可在 Word 里直接编辑；切换页签不会打断识别，识别记录默认永久保存，可在设置里限定天数并手动清空。历史记录支持**查看**（按页只读弹窗）和**发送到编辑器**，不必重新下载或重新识别
 
 ![文档识别](docs/img/doc-ocr.png)
@@ -129,10 +135,10 @@ lib/
  ├─ 10-latex.js          符号表 / 模板 / 解析器 / 源码工具（纯逻辑）
  ├─ 20-render.js         MathJax 渲染、九种导出格式、PDF 生成
  ├─ 30-visual.js         旧版符号面板 / 模板面板 / 结构树（新面板见 35-tiles）
- ├─ 35-tiles.js          快捷工具与公式模板磁贴、收藏夹、导出菜单
+ ├─ 35-tiles.js          快捷工具与公式模板磁贴、收藏夹
  ├─ 40-recognition.js    识别后端（Harness 模型 / OpenAI 兼容端点）
  ├─ 45-convert.js        TeX → AsciiMath / Typst、MathML → OMML
- ├─ 50-app.js            主界面：编辑器、预览、导出、历史、分享
+ ├─ 50-app.js            主界面：编辑器、预览、导出、历史
  ├─ 56-recognition-panels.js  图片识别与文档识别界面
  ├─ 60-settings-help.js  设置面板与帮助页
  └─ 90-skin.js           企业简洁风皮肤与主题变量
@@ -141,7 +147,7 @@ vendor/                  MathJax 3.2.2 与 PDF.js（随包分发）
 
 ## 设置
 
-- **编辑器**：界面缩放（默认 125%）、源码字号、自动换行、公式编号、收藏夹上限
+- **编辑器**：界面缩放（默认 125%）、源码字号、自动换行、公式编号（多行环境整块一个号）、收藏夹上限
 - **识别**：`auto` 优先用 Harness 模型；也可填 OpenAI 兼容端点（URL / 模型 / Key）
 - 渲染与导出完全离线，只有识别会把图片发给你配置的后端
 - 设置保存在本机 `<DSH_HOME>/latex-editor/settings.json`；端点 Key 也写入该文件（明文），共享机器上请留空

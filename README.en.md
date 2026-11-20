@@ -13,8 +13,9 @@ bundled MathJax, PDFs are parsed by the bundled PDF.js — no account, no quota,
 - Live LaTeX rendering (MathJax 3.2.2, SVG output, offline)
 - UI scale **125%** by default (Settings → UI scale, 100%–200%)
 - Light / dark theme switch (follows the system by default), 简体中文 / 繁體中文 / English
-- Copy the formula as an image, or export a self-contained HTML page that opens offline
+- Copy the formula as an image (the background follows the preview surface: white / dark / transparent), or export a self-contained HTML page that opens offline
 - Export bar with five groups: copy image / images / code / documents / escaping
+- Drop a `.tex` / `.txt` file straight onto the editor to import it
 
 ![Editor](docs/img/editor.png)
 
@@ -52,10 +53,12 @@ A separate row below the tiles, divided by a rule, with eight equal 62px icon bu
 | Environment | align / aligned / gathered / cases / split / array / eqnarray, plus "none" (strips the outer environment); wraps the selection in `\begin{…}…\end{…}` |
 | Clear | Empties the source |
 | Undo | Undo the previous edit (keystrokes within 400 ms merge, up to 120 steps) |
-| Import | Reads `.tex` / `.txt` |
+| Import | Reads `.tex` / `.txt`; you can also drop the file onto the editor |
 | Favourite | Saves the current formula to favourites |
 
 With a selection the text is wrapped; without one an empty shell is inserted and the caret placed inside.
+
+Drag-and-drop accepts only `.tex` / `.txt` (or `text/plain`); other types show a notice and leave the source untouched.
 
 ### Favourites
 
@@ -74,7 +77,7 @@ The export bar sits at the top of the preview column, with five controls:
 
 | Menu | Options |
 | --- | --- |
-| Copy image | Puts the formula on the clipboard as PNG, ready to paste into Word / PowerPoint / chat |
+| Copy image | Puts the formula on the clipboard as PNG, ready to paste into Word / PowerPoint / chat; the background follows the preview surface (white / dark / transparent) |
 | Image | SVG / PNG / JPG (3× scale) |
 | Code | LaTeX, AsciiMath, Typst, SVG Code, HTML inline, HTML display, MathML, MathML (mml:), MathML (m:), MathML (attr:), OMML |
 | Document | Word (.docx), LaTeX (.tex), Markdown (.md), HTML (.html) |
@@ -87,6 +90,9 @@ AsciiMath and Typst are produced by a real TeX parser and OMML by converting the
 - Structured formulas: fractions, superscripts/subscripts, roots (including `\sqrt[n]{}`), integral/sum limits and matrices are written as real OMML, so they stay editable in Word; `pmatrix` / `bmatrix` / `vmatrix` / `matrix` become a native Word matrix with the matching delimiters
 - Multi-line environments: `align` / `gather` / `aligned` / `cases` become real multi-line Word formulas (the MathJax equation-number column is dropped), never a single line of raw LaTeX
 - "Copy image" uses the browser clipboard API, so the first use may ask for permission; a denial shows a message instead of failing silently
+- The copied PNG background follows the preview surface: white gives an opaque white PNG, dark gives a dark PNG (good for dark slides / chats), transparent stays transparent
+- Markdown export always wraps the formula in a single `$$ … $$`; when the source already carries `$…$` / `$$…$$` / `\[…\]`, the outer delimiters are stripped first, so nothing nests
+- Formula numbering: when enabled, a multi-line environment (`align` / `gather`, …) gets exactly one number for the whole block and `\tag{…}` is kept as written; when disabled no automatic number appears at all
 - Matrices, `cases` and `aligned` map to Typst constructs (`mat(...)`, `cases(...)`, `&` alignment), and font commands such as `\mathbb` / `\mathcal` / `\mathfrak` become `bb()` / `cal()` / `frak()`; the Typst output is compiled against typst 0.15.1 as part of verification
 - AsciiMath has limited expressive power: environments such as `cases` / `aligned` still emit the closest possible output, together with a "not fully converted" notice so you can decide whether to adjust it
 
@@ -94,7 +100,7 @@ The canvas background follows the theme: white in the light theme, black in the 
 
 ### Recognition
 
-- **Image OCR**: drop, paste or pick an image; the configured model returns LaTeX and inserts it
+- **Image OCR**: drop, paste or pick an image; the configured model returns LaTeX and inserts it. Every result is also kept in "Recent results" (last 10, surviving reloads and tab switches), where you can load it back, copy it, send it to the editor, delete one entry or clear the list
 - **Document OCR**: renders each PDF page and recognises it page by page; when done you can **download Word (.docx) / LaTeX / Markdown** — the Word file contains real Office Math (Cambria Math) equations, with fractions, roots, scripts and matrices preserved and editable in Word. Switching tabs does not interrupt a run, and records are kept forever by default (a retention period can be set in Settings, and the list can be cleared by hand). Each record can also be **viewed** (read-only page-by-page dialog) or **sent straight to the editor**, without downloading or re-running recognition
 
 ![Document OCR](docs/img/doc-ocr.png)
@@ -132,10 +138,10 @@ lib/
  ├─ 10-latex.js          symbol palette / templates / parser / source utilities
  ├─ 20-render.js         MathJax rendering, nine export formats, PDF writer
  ├─ 30-visual.js         legacy symbol / template panels and structure tree
- ├─ 35-tiles.js          quick-tool and template tiles, favourites, export menus
+ ├─ 35-tiles.js          quick-tool and template tiles, favourites
  ├─ 40-recognition.js    recognition backends (harness model / OpenAI-compatible endpoint)
  ├─ 45-convert.js        TeX → AsciiMath / Typst, MathML → OMML
- ├─ 50-app.js            main UI: editor, preview, export, history, share
+ ├─ 50-app.js            main UI: editor, preview, export, history
  ├─ 56-recognition-panels.js  image and document OCR panels
  ├─ 60-settings-help.js  settings and help page
  └─ 90-skin.js           corporate-clean skin and theme tokens
@@ -144,7 +150,7 @@ vendor/                 MathJax 3.2.2 and PDF.js (shipped with the plugin)
 
 ## Settings
 
-- **Editor**: UI scale (125% default), source font size, word wrap, formula numbering, favourites limit
+- **Editor**: UI scale (125% default), source font size, word wrap, formula numbering (one number per multi-line block), favourites limit
 - **Recognition**: `auto` prefers the harness model; otherwise fill in an OpenAI-compatible endpoint (URL / model / key)
 - Rendering and export are fully offline; only OCR sends the image to your backend
 - Settings live in `<DSH_HOME>/latex-editor/settings.json`; the endpoint key is written there too (plain text), so leave it empty on shared machines
