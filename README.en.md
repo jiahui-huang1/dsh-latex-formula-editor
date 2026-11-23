@@ -79,13 +79,16 @@ The export bar sits at the top of the preview column, with five controls:
 | --- | --- |
 | Copy image | Puts the formula on the clipboard as PNG, ready to paste into Word / PowerPoint / chat; the background follows the preview surface (white / dark / transparent) |
 | Image | SVG / PNG / JPG (3× scale) |
-| Code | LaTeX, AsciiMath, Typst, SVG Code, HTML inline, HTML display, MathML, MathML (mml:), MathML (m:), MathML (attr:), OMML |
+| Code | LaTeX, AsciiMath, Typst, SVG Code, HTML inline, HTML display, MathML (submenu: MathML / mml: / m: / attr:), OMML |
 | Document | Word (.docx), LaTeX (.tex), Markdown (.md), HTML (.html) |
 | Escape | Escaped backslash, `$…$`, `$$…$$`, `\(…\)`, `\[…\]`, JSON string |
 
 `HTML (.html)` writes a single offline file: the formula is inlined as vector SVG, with the LaTeX source folded underneath and no scripts or external assets — recipients can double-click it in any browser, even without DSH or this plugin.
 
 AsciiMath and Typst are produced by a real TeX parser and OMML by converting the MathML DOM into Word's formula structure — not by copying the LaTeX source.
+
+- Multi-line environments (`align` / `aligned` / `gather` / `split`) become Typst alignment `&` points and `\` line breaks that compile as-is; AsciiMath has no alignment syntax, so rows are joined with ` ; ` and unsupported environments are flagged
+- The code menu nests the four MathML prefixes (plain, `mml:`, `m:`, `attr:`) in a submenu; all four are valid XML
 
 - Structured formulas: fractions, superscripts/subscripts, roots (including `\sqrt[n]{}`), integral/sum limits and matrices are written as real OMML, so they stay editable in Word; `pmatrix` / `bmatrix` / `vmatrix` / `matrix` become a native Word matrix with the matching delimiters
 - Multi-line environments: `align` / `gather` / `aligned` / `cases` become real multi-line Word formulas (the MathJax equation-number column is dropped), never a single line of raw LaTeX
@@ -136,7 +139,7 @@ client.js               Client entry: registers the sidebar entry (sidebar.panel
 lib/
  ├─ 00-core.js           namespace, i18n, settings store, UI primitives, icons
  ├─ 10-latex.js          symbol palette / templates / parser / source utilities
- ├─ 20-render.js         MathJax rendering, nine export formats, PDF writer
+ ├─ 20-render.js         MathJax rendering, image/code/document exports, PDF writer
  ├─ 30-visual.js         legacy symbol / template panels and structure tree
  ├─ 35-tiles.js          quick-tool and template tiles, favourites
  ├─ 40-recognition.js    recognition backends (harness model / OpenAI-compatible endpoint)

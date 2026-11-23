@@ -76,13 +76,16 @@ MathJax，PDF 解析用随包分发的 PDF.js，没有账号、没有额度、�
 | --- | --- |
 | 复制图片 | 把公式以 PNG 写入剪贴板，可直接粘进 Word / PPT / 聊天窗口；背景跟随预览表面（白底 / 深色 / 透明） |
 | 输出图片 | SVG / PNG / JPG（3× 倍率） |
-| 输出代码 | LaTeX、AsciiMath、Typst、SVG Code、HTML 行内、HTML 独立、MathML、MathML(mml:)、MathML(m:)、MathML(attr:)、OMML |
+| 输出代码 | LaTeX、AsciiMath、Typst、SVG Code、HTML 行内、HTML 独立、MathML（二级：MathML / mml: / m: / attr:）、OMML |
 | 输出文档 | Word (.docx)、LaTeX (.tex)、Markdown (.md)、HTML (.html) |
 | 转义 | 反斜杠转义、`$…$`、`$$…$$`、`\(…\)`、`\[…\]`、JSON 字符串 |
 
 `HTML (.html)` 生成单个离线文件：公式以矢量 SVG 内联，附折叠的 LaTeX 源码，不含脚本和外部依赖，双击即可用任意浏览器打开，适合发给没装 DSH 或本插件的人。
 
 AsciiMath / Typst 由内置 TeX 解析器真实转换，OMML 由 MathML DOM 转换为 Word 公式结构，不是直接复制 LaTeX。
+
+- 多行环境：`align` / `aligned` / `gather` / `split` 转成 Typst 的对齐点 `&` 与换行 `\`，可原样编译；AsciiMath 没有对齐语法，逐行用 ` ; ` 连接并在遇到未支持环境时提示
+- 输出代码里的 MathML 是二级菜单：0 个、`mml:`、`m:`、`attr:` 四种前缀形态，均为可解析的 XML
 
 - 结构公式：分数、上下标、根式（含 `\sqrt[n]{}`）、积分/求和上下限、矩阵都按语义写入 OMML，Word 里是可继续编辑的公式对象；`pmatrix` / `bmatrix` / `vmatrix` / `matrix` 会生成 Word 原生矩阵并带对应括号
 - 多行环境：`align` / `gather` / `aligned` / `cases` 在 Word 里写成多行公式（自动去掉 MathJax 的公式编号列），不会再退化成一行 LaTeX 源码
@@ -133,7 +136,7 @@ client.js                客户端入口：注册侧栏入口（sidebar.panellis
 lib/
  ├─ 00-core.js           命名空间、i18n、设置存储、UI 原子组件、图标
  ├─ 10-latex.js          符号表 / 模板 / 解析器 / 源码工具（纯逻辑）
- ├─ 20-render.js         MathJax 渲染、九种导出格式、PDF 生成
+ ├─ 20-render.js         MathJax 渲染、图片/代码/文档导出、PDF 生成
  ├─ 30-visual.js         旧版符号面板 / 模板面板 / 结构树（新面板见 35-tiles）
  ├─ 35-tiles.js          快捷工具与公式模板磁贴、收藏夹
  ├─ 40-recognition.js    识别后端（Harness 模型 / OpenAI 兼容端点）
