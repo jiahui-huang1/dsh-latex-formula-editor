@@ -93,8 +93,8 @@ AsciiMath / Typst 由内置 TeX 解析器真实转换，OMML 由 MathML DOM 转�
 - 复制图片的底色跟随预览表面：白底得到不透明白底 PNG、深色得到深底 PNG（适合深色 PPT / 聊天）、透明得到透明 PNG
 - Markdown 导出统一包成单层 `$$ … $$`；源码本身已带 `$…$` / `$$…$$` / `\[…\]` 时会先去掉外层定界符，避免嵌套
 - 公式编号：开启后多行环境（`align` / `gather` 等）整块只标一个号，`\tag{…}` 原样保留；关闭时不出现任何自动编号
-- 矩阵、`cases`、`aligned` 在 Typst 侧有对应写法（`mat(...)`、`cases(...)`、按 `&` 对齐），`\mathbb` / `\mathcal` / `\mathfrak` 等字体命令会转成 `bb()` / `cal()` / `frak()`；Typst 输出已用 typst 0.15.1 实际编译验证
-- AsciiMath 表达力有限：`cases` / `aligned` 这类环境会照常输出最接近的结果，同时提示「以下环境未完全转换」，便于你自行判断
+- 矩阵、`cases`、`aligned` 在 Typst 侧有对应写法（`mat(...)`、`cases(...)`、按 `&` 对齐），`\mathbb` / `\mathcal` / `\mathfrak` 等字体命令会转成 `bb()` / `cal()` / `frak()`；关系符与集合符按 Typst 真实写法转（`\neq`→`eq.not`、`\subset`→`subset`、`\setminus`→`without`、`\cap`→`inter`、`\ddot`→`dot.double(...)`），无法识别的命令转成引号文本、按直立文字显示（不再拼接成非法标识符）；Typst 输出已用 typst 0.15.1 逐条编译验证（内置符号表 109 项 + 74 条语料全部通过）
+- AsciiMath 表达力有限：`aligned` / `gather` 这类对齐环境按行用 ` ; ` 拼接，`cases` 输出 `{:(值, 条件),(值, 条件):}` 分段形式，`\substack` / `\boxed` / `\tag` 等只保留内容；未完全转换时会提示「以下环境未完全转换」，便于你自行判断
 
 预览画布底色随主题自动切换：浅色主题白底、深色主题黑底（透明 / 白底 / 深色仍可手动覆盖）。
 
