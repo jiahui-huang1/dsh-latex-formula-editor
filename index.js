@@ -24,6 +24,20 @@ const ALL_PREFIXES = [PREFIX].concat(PREFIX_ALIASES)
 const MAX_JSON_BYTES = 24 * 1024 * 1024
 const MAX_LATEX_CHARS = 64 * 1024
 
+/* Read once: the version /health reports must follow package.json instead of a
+   hand-maintained literal that drifts behind on every release. */
+let ownVersion = null
+async function pluginVersion() {
+  if (ownVersion) return ownVersion
+  try {
+    const raw = await readFile(path.join(HERE, 'package.json'), 'utf8')
+    ownVersion = String(JSON.parse(raw).version || '').trim() || 'unknown'
+  } catch {
+    ownVersion = 'unknown'
+  }
+  return ownVersion
+}
+
 const STATIC_ROOTS = {
   lib: path.join(HERE, 'lib'),
   vendor: path.join(HERE, 'vendor'),
@@ -459,7 +473,7 @@ export function apply(ctx, rawConfig) {
     }
     sendJson(res, 200, {
       ok: true,
-      version: '1.0.0',
+      version: await pluginVersion(),
       backend: config.backend,
       llm: llmState,
       endpoint: { configured: Boolean(config.endpointUrl), model: config.endpointModel || null },

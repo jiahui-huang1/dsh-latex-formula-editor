@@ -53,12 +53,13 @@ A separate row below the tiles, divided by a rule, with eight equal 62px icon bu
 | Environment | align / aligned / gathered / cases / split / array / eqnarray, plus "none" (strips the outer environment); wraps the selection in `\begin{…}…\end{…}` |
 | Clear | Empties the source |
 | Undo | Undo the previous edit (keystrokes within 400 ms merge, up to 120 steps) |
+| Redo | Redo an undone edit (`Ctrl/Cmd+Shift+Z`); typing again clears the redo history |
 | Import | Reads `.tex` / `.txt`; you can also drop the file onto the editor |
 | Favourite | Saves the current formula to favourites |
 
 With a selection the text is wrapped; without one an empty shell is inserted and the caret placed inside.
 
-Drag-and-drop accepts only `.tex` / `.txt` (or `text/plain`); other types show a notice and leave the source untouched.
+Drag-and-drop accepts only `.tex` / `.txt` (or `text/plain`); other types show a notice and leave the source untouched. The encoding is detected automatically: UTF-8 (with or without BOM), UTF-16 (BOM) and GBK/GB18030 all import correctly, so Chinese comments no longer turn into mojibake.
 
 ### Favourites
 
